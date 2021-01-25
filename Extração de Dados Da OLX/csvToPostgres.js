@@ -1,34 +1,35 @@
-const fs = require('fs');
-const pg = require('pg')
+const fs = require("fs");
+const pg = require("pg");
+
 const config = {
-  host: 'localhost',
-  user: 'postgres',
-  password: '123456',
-  database: 'TCC',
-  port: 5432
+  host: "localhost",
+  user: "postgres",
+  password: "123456",
+  database: "TCC",
+  port: 5432,
 };
+
 const client = new pg.Client(config);
 
-client.connect(err => {
+client.connect((err) => {
   if (err) throw err;
 });
 
-fs.readFile('carros.csv', 'utf8', (err, data) => {
+fs.readFile("carros.csv", "utf8", (err, data) => {
   if (err) console.log(err.message);
   else {
-    const linha = data.split('\n')
+    const linha = data.split("\n");
 
     for (let i = 1; i < linha.length; i++) {
-      const info = linha[i].split(',');
+      const info = linha[i].split(",");
       let dadoNull = false;
-      info.forEach(dado => {
-        if (dado == 'null') {
-          dadoNull = true
+      info.forEach((dado) => {
+        if (dado == "null") {
+          dadoNull = true;
         }
       });
       if (!dadoNull) {
-        const query =
-          `
+        const query = `
           INSERT INTO carros VALUES 
           ('${info[0]}','${info[1]}','${info[2]}','${info[3]}',
           '${info[4]}','${info[5]}','${info[6]}',
@@ -37,12 +38,14 @@ fs.readFile('carros.csv', 'utf8', (err, data) => {
           '${info[14]}','${info[15]}','${info[16]}',
           '${info[17]}','${info[18]}','${info[19]}','${info[20]}',
           '${info[21]}','${info[22]}')
-        `
+        `;
 
-        client.query(query).then(res => {
-        }).catch(err => {
-          console.log(err.message);
-        });
+        client
+          .query(query)
+          .then((res) => {})
+          .catch((err) => {
+            console.log(err.message);
+          });
       }
     }
   }
