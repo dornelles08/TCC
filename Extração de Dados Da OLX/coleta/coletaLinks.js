@@ -1,11 +1,12 @@
-const puppeteer = require('puppeteer');
-const mongoose = require('mongoose');
+const puppeteer = require("puppeteer");
+const mongoose = require("mongoose");
+const cron = require("node-cron");
 
-const Anuncios = require('../model/Anuncios');
-const Carro = require('../model/Carro');
+const Anuncios = require("../model/Anuncios");
+const Carro = require("../model/Carro");
 
-(async () => {
-  await mongoose.connect('mongodb://localhost:27017/TCCsp', {
+async function coletaLinks() {
+  await mongoose.connect("mongodb+srv://geral:geral@cluster0.sg3qs.mongodb.net/TCC?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
@@ -16,28 +17,29 @@ const Carro = require('../model/Carro');
   for (let i = 1; i <= 100; i++) {
     try {
       await page.goto(
-        `https://sp.olx.com.br/sao-paulo-e-regiao/autos-e-pecas/carros-vans-e-utilitarios?o=${i}`
+        `https://se.olx.com.br/autos-e-pecas/carros-vans-e-utilitarios?o=${i}`
+        // `https://sp.olx.com.br/sao-paulo-e-regiao/autos-e-pecas/carros-vans-e-utilitarios?o=${i}`
       );
-      //`https://se.olx.com.br/autos-e-pecas/carros-vans-e-utilitarios?o=${i}`
 
       const linkAnuncios = await page.evaluate(() => {
-        const nodeList = document.querySelector('#ad-list');
-        const itens = nodeList.querySelectorAll('a');
+        const nodeList = document.querySelector("#ad-list");
+        const itens = nodeList.querySelectorAll("a");
         const carrosArray = [...itens];
 
         const linksAnuncios = carrosArray.map((anuncio) => {
           return {
-            link: anuncio.getAttribute('href'),
+            link: anuncio.getAttribute("href"),
           };
         });
         return linksAnuncios;
       });
 
       linkAnuncios.forEach(async (link) => {
-        await Anuncios.create(link);
-        // const existe = await Carro.findOne({ link: link.link });
-        // if (!existe) {
-        // }
+        const existe = await Carro.findOne({ link: link.link });
+        const existeAnuncio = await Anuncios.findOne({ link: link.link });
+        if (!existe && !existeAnuncio) {
+          await Anuncios.create(link);
+        }
       });
       console.log(`Pagina ${i}`);
     } catch (error) {
@@ -47,5 +49,7 @@ const Carro = require('../model/Carro');
 
   await browser.close();
 
-  console.log('Finalizado');
-})();
+  console.log("Finalizado");
+}
+
+cron.schedule("0 * * * *", coletaLinks);
