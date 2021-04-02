@@ -6,10 +6,13 @@ const Anuncios = require("../model/Anuncios");
 const Carro = require("../model/Carro");
 
 async function coletaLinks() {
-  await mongoose.connect("mongodb+srv://geral:geral@cluster0.sg3qs.mongodb.net/TCC?retryWrites=true&w=majority", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await mongoose.connect(
+    "mongodb+srv://geral:geral@cluster0.sg3qs.mongodb.net/TCC?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  );
 
   const browser = await puppeteer.launch({ timeout: 500000 });
   const page = await browser.newPage();
@@ -52,4 +55,5 @@ async function coletaLinks() {
   console.log("Finalizado");
 }
 
+coletaLinks();
 cron.schedule("0 * * * *", coletaLinks);
