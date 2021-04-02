@@ -14,10 +14,7 @@ async function coletaLinks() {
     }
   );
 
-  const browser = await puppeteer.launch({
-    headless: false,
-    args: ["--no-sandbox"],
-  });
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
   for (let i = 1; i <= 100; i++) {
