@@ -4,26 +4,29 @@ const dbCarro = require('./model/Carro');
 const fs = require('fs');
 const pg = require('pg');
 
-const config = {
-  host: 'localhost',
-  user: 'postgres',
-  password: '123456',
-  database: 'TCC',
-  port: 5432
-};
-const client = new pg.Client(config);
+// const config = {
+//   host: 'localhost',
+//   user: 'postgres',
+//   password: '123456',
+//   database: 'TCC',
+//   port: 5432
+// };
+// const client = new pg.Client(config);
 
-client.connect(err => {
-  if (err) throw err;
-});
+// client.connect(err => {
+//   if (err) throw err;
+// });
 
 (async () => {
   fs.writeFile('carros.csv', 'Modelo,Marca,Tipo de veículo,Ano,Quilometragem,Potência do motor,Combustível,Câmbio,Direção,Cor,Portas,Final de placa,Vidro elétrico,Trava elétrica,Ar condicionado,Direção hidráulica,Som,Air bag,Alarme,Sensor de ré,Câmera de ré,Blindado,Valor\n', (err) => { if (err) console.log(err.message); });
 
-  await mongoose.connect('mongodb://localhost:27017/TCCse', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
+  await mongoose.connect(
+    "mongodb+srv://geral:geral@cluster0.sg3qs.mongodb.net/TCC?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  );
   const carros = await dbCarro.find();
   carros.forEach(carro => {
     const newCarro = new Carro();

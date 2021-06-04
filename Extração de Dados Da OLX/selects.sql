@@ -1,6 +1,9 @@
 -- Removendo carros antes 2010
 delete from carros where ano < 2011
 
+-- Removendo carros antes 2016
+delete from carros where ano < 2016
+
 -- Removendo Carros com menos de 1000 km
 delete from carros where quilometragem < 1000 and ano < 2020
 

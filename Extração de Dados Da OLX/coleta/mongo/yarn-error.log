@@ -1,0 +1,41 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add mongosse pg express
+
+PATH: 
+  C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files\Java\jdk1.8.0_231\bin;C:\app\liped\product\18.0.0\dbhomeXE\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\geckodriver.exe;C:\Program Files (x86)\Tesseract-OCR;C:\ProgramData\chocolatey\bin;C:\Users\liped\AppData\Local\Android\SDK\platform-tools;C:\Users\liped\AppData\Local\Android\SDK\tools;C:\Program Files (x86)\Yarn\bin\;C:\Users\liped\AppData\Local\Programs\Python\Python38-32\Scripts\;C:\Users\liped\AppData\Local\Programs\Python\Python38-32\;C:\Program Files\heroku\bin;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\nodejs\;;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Users\liped\AppData\Local\Microsoft\WindowsApps;C:\Users\liped\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\liped\AppData\Local\Programs\EmEditor;C:\Users\liped\.dotnet\tools;C:\sonar-scanner-msbuild;C:\Users\liped\AppData\Local\Yarn\bin;C:\Users\liped\AppData\Local\Microsoft\WindowsApps;C:\Users\liped\AppData\Local\hyper\app-3.0.2\resources\bin;C:\Users\liped\AppData\Local\gitkraken\bin;C:\Users\liped\AppData\Roaming\npm
+
+Yarn version: 
+  1.22.0
+
+Node version: 
+  14.16.1
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/mongosse: Not found
+      at Request.params.callback [as _callback] (C:\Program Files (x86)\Yarn\lib\cli.js:66084:18)
+      at Request.self.callback (C:\Program Files (x86)\Yarn\lib\cli.js:140727:22)
+      at Request.emit (events.js:315:20)
+      at Request.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:141699:10)
+      at Request.emit (events.js:315:20)
+      at IncomingMessage.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:141621:12)
+      at Object.onceWrapper (events.js:421:28)
+      at IncomingMessage.emit (events.js:327:22)
+      at endReadableNT (internal/streams/readable.js:1327:12)
+      at processTicksAndRejections (internal/process/task_queues.js:80:21)
+
+npm manifest: 
+  {
+    "name": "mongo",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
