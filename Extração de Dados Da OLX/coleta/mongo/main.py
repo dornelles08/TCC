@@ -1,8 +1,7 @@
 import schedule
 import requests
 from bs4 import BeautifulSoup
-from time import time
-import time
+from time import time, sleep
 from lxml import etree
 
 
@@ -103,6 +102,7 @@ def coletaDados(link):
 
 
 def main():
+    print(time)
     links = coletaLinks()
 
     for l in links:
@@ -110,40 +110,7 @@ def main():
         requests.post('http://localhost:1997/saveOnMongo', json=dados)
 
 
-
 schedule.every().hour.do(main)
 while 1:
     schedule.run_pending()
-    time.sleep(1)
-
-
-# dic = {
-#     'title': 'Amarok Highline 2014',
-#     'price': 'R$ 94.000',
-#     'caracteristicas': [
-#         {'title': 'Categoria', 'desc': 'Carros, vans e utilitários'},
-#         {'title': 'Modelo', 'desc': 'VW - VOLKSWAGEN AMAROK HIGHLINE CD 2.0 16V TDI 4X4 DIES.'},
-#         {'title': 'Marca', 'desc': 'VW - VOLKSWAGEN'},
-#         {'title': 'Ano', 'desc': '2014'},
-#         {'title': 'Quilometragem', 'desc': '150000'},
-#         {'title': 'Combustível', 'desc': 'Diesel'},
-#         {'title': 'Câmbio', 'desc': 'Automático'},
-#         {'title': 'Direção', 'desc': 'Hidráulica'},
-#         {'title': 'Cor', 'desc': 'Branco'},
-#         {'title': 'Portas', 'desc': '4 portas'},
-#         {'title': 'Final de placa', 'desc': '9'}
-#     ],
-#     'opcionais': [
-#         'Vidro elétrico',
-#         'Air bag',
-#         'Trava elétrica',
-#         'Ar condicionado',
-#         'Direção hidráulica',
-#         'Alarme',
-#         'Som',
-#         'Sensor de ré'
-#     ],
-#     'link': 'https://se.olx.com.br/sergipe/autos-e-pecas/carros-vans-e-utilitarios/amarok-highline-2014-884488113'
-# }
-
-# requests.post('http://localhost:1997/saveOnMongo', json=dic)
+    sleep(1)
