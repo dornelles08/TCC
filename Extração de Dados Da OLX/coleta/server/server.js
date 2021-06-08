@@ -28,8 +28,7 @@ app.post('/saveOnMongo', async (req, res) => {
   }
 })
 
-app.get('/onMongo', async (req, res) => {
-  console.log(new Date());
+app.get('/onMongo', async (req, res) => {  
   await mongoose.connect("mongodb+srv://geral:geral@cluster0.sg3qs.mongodb.net/TCC?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
