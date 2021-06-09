@@ -113,9 +113,7 @@ def main():
             print(f"Erro na coleda desse dado - {l}")
 
 
-main()
-
-# schedule.every().hour.do(main)
-# while 1:
-#     schedule.run_pending()
-#     sleep(1)
+schedule.every().hour.do(main)
+while 1:
+    schedule.run_pending()
+    sleep(1)
