@@ -106,11 +106,16 @@ def main():
     links = coletaLinks()
 
     for l in links:
-        dados = coletaDados(l)
-        requests.post('http://localhost:1997/saveOnMongo', json=dados)
+        try:
+            dados = coletaDados(l)
+            requests.post('http://localhost:1997/saveOnMongo', json=dados)
+        except:
+            print(f"Erro na coleda desse dado - {l}")
 
 
-schedule.every().hour.do(main)
-while 1:
-    schedule.run_pending()
-    sleep(1)
+main()
+
+# schedule.every().hour.do(main)
+# while 1:
+#     schedule.run_pending()
+#     sleep(1)
