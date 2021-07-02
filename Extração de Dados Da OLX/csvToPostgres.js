@@ -15,7 +15,7 @@ client.connect((err) => {
   if (err) throw err;
 });
 
-fs.readFile("carrosV2.csv", "utf8", (err, data) => {
+fs.readFile("carros.csv", "utf8", (err, data) => {
   if (err) console.log(err.message);
   else {
     const linha = data.split("\n");
@@ -30,7 +30,7 @@ fs.readFile("carrosV2.csv", "utf8", (err, data) => {
       });
       if (!dadoNull) {
         const query = `
-          INSERT INTO carrosV2 VALUES 
+          INSERT INTO carros VALUES 
           ('${info[0]}','${info[1]}','${info[2]}','${info[3]}',
           '${info[4]}','${info[5]}','${info[6]}',
           '${info[7]}','${info[8]}','${info[9]}','${info[10]}',

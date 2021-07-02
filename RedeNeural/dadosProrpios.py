@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 import time
 
+#Definição de argumentos
 args={
     'batch_size': 20,
     'num_workers': 4,
@@ -18,31 +19,33 @@ args={
     'num_epochs': 500
 }
 
+#Definição do dispositivo de execução, cpu ou gpu
 if torch.cuda.is_available():
   args['device'] = torch.device('cuda')
 else:
   args['device'] = torch.device('cpu')
 
-print(args['device'])
-
+#Leitura do arquivo com os dados
 df = pd.read_csv('hour.csv')
 
-torch.manual_seed(1)
+#Pegando amostras diferentes
 indices = torch.randperm(len(df)).tolist()
 
+#Separando em dataframe os dados de treino e dados de teste
 train_size = int(0.8*len(df))
 df_train = df.iloc[indices[:train_size]]
 df_test = df.iloc[indices[train_size:]]
 
 print(len(df_train), len(df_test))
 
+#Salvando cada grupo em um arquivo especifico
 df_train.to_csv('bike_train.csv', index=False)
 df_test.to_csv('bike_test.csv', index=False)
 
+#Classe que representa o dado
 class Bicicletinha(Dataset):
   def __init__(self, csv_path):
     self.dados = pd.read_csv(csv_path).to_numpy()
-
 
   def __getitem__(self, idx):
     sample = self.dados[idx][2:14]
@@ -57,6 +60,7 @@ class Bicicletinha(Dataset):
   def __len__(self):
     return len(self.dados)
 
+#Carregando os dados de treino e de teste
 train_set = Bicicletinha('bike_train.csv')
 test_set  = Bicicletinha('bike_test.csv')
 
@@ -70,6 +74,7 @@ test_loader = DataLoader(test_set,
                          num_workers=args['num_workers'],
                          shuffle=False)
 
+#Criação da MLP
 class MLP(nn.Module):
   
   def __init__(self, input_size, hidden_size, out_size):
@@ -94,24 +99,31 @@ class MLP(nn.Module):
     
     return output
 
+#Definição das caracteristicas da rede
+#Quantidade de neuronios na camada de entrada
 input_size  = train_set[0][0].size(0)
+#Quantidade de neuronios na camada intermediaria
 hidden_size = 128
+#Quantidade de neuronios na camada de saída
 out_size    = 1
 
+#Inicializando a MLP
 net = MLP(input_size, hidden_size, out_size).to(args['device'])
 print(net)
 
+#Definição da função perda e do otimizados
 criterion = nn.L1Loss().to(args['device'])
-
 optimizer = optim.Adam(net.parameters(), lr=args['lr'], weight_decay=args['weight_decay'])
 
+#Função de Treinamento
 def train(train_loader, net, epoch):
 
-  # Training mode
+  # Modo de treinamento
   net.train()
   
   start = time.time()
   
+  #Valor da loss em cada epoca
   epoch_loss  = []
   for batch in train_loader:
     
