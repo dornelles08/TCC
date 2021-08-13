@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Carro = require('./model/Carro');
+const Carro = require('../model/Carro');
 
 (async () => {
   await mongoose.connect('mongodb://localhost:27017/TCC', {
