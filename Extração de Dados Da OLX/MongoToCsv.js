@@ -3,10 +3,10 @@ const Carro = require('./Carro');
 const dbCarro = require('./model/Carro');
 const fs = require('fs');
 
-(async () => {
+module.export = async () => {
   fs.writeFile('carros.csv', 'Modelo,Marca,Tipo de veículo,Ano,Quilometragem,Potência do motor,Combustível,Câmbio,Direção,Cor,Portas,Final de placa,Vidro elétrico,Trava elétrica,Ar condicionado,Direção hidráulica,Som,Air bag,Alarme,Sensor de ré,Câmera de ré,Blindado,Valor\n', (err) => { if (err) console.log(err.message); });
 
-  console.log("Inicio");
+  console.log("Conectando no banco");
   await mongoose.connect(
     "mongodb+srv://geral:geral@cluster0.sg3qs.mongodb.net/TCC?retryWrites=true&w=majority",
     {
@@ -14,6 +14,9 @@ const fs = require('fs');
       useUnifiedTopology: true,
     }
   );
+  console.log("Conecxão estabelecida");
+
+  console.log("Inicio");
   const carros = await dbCarro.find();
   console.log(carros.length);
   carros.forEach(carro => {
@@ -25,10 +28,10 @@ const fs = require('fs');
     separarCaracteristicas(carro.caracteristicas, newCarro);
 
     newCarro.saveCSV('carros.csv');
-    // newCarro.savePostgres(client);
-  })
+  });
+
   console.log('Fim');
-})();
+}
 
 function separandoOpcionais(opcionais, carro) {
   carro.setVidroEletrico(0)

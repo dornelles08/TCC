@@ -2,7 +2,11 @@ const pg = require('pg');
 const fs = require("fs");
 const config = require("./config/db");
 
-(async () => {
+/**
+ * Tranforma todos os atributos do tipo string 
+ * e converte para numerico
+ */
+moudle.export = async () => {
   const client = new pg.Client(config);
 
   client.connect((err) => {
@@ -57,4 +61,4 @@ const config = require("./config/db");
       fs.writeFile("Mapeamento/MapCor.csv", `${index},${linha.cor}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); })
     });
   }));
-})();
+}

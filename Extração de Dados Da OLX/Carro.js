@@ -55,7 +55,7 @@ class Carro {
 
   saveCSV(path) {
     const dados = `${this.modelo},${this.marca},${this.tipoVeiculo},${this.ano},${this.quilometragem},${this.potenciaMotor},${this.combustivel},${this.cambio},${this.direcao},${this.cor},${this.portas},${this.finalPlaca},${this.vidroEletrico},${this.travaEletrica},${this.arCondicionado},${this.direcaohidraulica},${this.som},${this.airBag},${this.alarme},${this.sensorRe},${this.cameraRe},${this.blindado},${this.valor}\n`
-    fs.writeFileSync(path, dados, { flag: 'a' }, (err) => { if (err) console.log(err.message); });
+    fs.writeFileSync(path, dados, { flag: 'a' }, (err) => { if (err) console.log(err.message); else console.log("Arquivo Salvo"); });
   }
 
   savePostgres(pg) {
