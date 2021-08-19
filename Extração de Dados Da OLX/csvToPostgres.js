@@ -41,8 +41,7 @@ fs.readFile("carros.csv", "utf8", (err, data) => {
         `;
 
         client
-          .query(query)
-          .then((res) => {})
+          .query(query)          
           .catch((err) => {
             console.log(err.message);
           });
