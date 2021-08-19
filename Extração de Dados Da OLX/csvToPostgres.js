@@ -2,7 +2,7 @@ const fs = require("fs");
 const pg = require("pg");
 
 const config = {
-  host: "localhost",
+  host: "10.0.0.185",
   user: "postgres",
   password: "123456",
   database: "TCC",
