@@ -2,7 +2,7 @@ const pg = require('pg');
 const fs = require("fs");
 const config = require("./config/db");
 
-/**
+/** 
  * Tranforma todos os atributos do tipo string 
  * e converte para numerico
  */
