@@ -2,8 +2,13 @@ const mongoose = require('mongoose');
 const Carro = require('./Carro');
 const dbCarro = require('./model/Carro');
 const fs = require('fs');
+const ProgressBar = require('progress');
 
-module.export = async () => {
+/**
+ * Baixa todos os carros do banco de dados (mongo) 
+ * e salva em csv para tratamento dos dados
+ */
+const MongoToCsv = async () => {
   fs.writeFile('carros.csv', 'Modelo,Marca,Tipo de veículo,Ano,Quilometragem,Potência do motor,Combustível,Câmbio,Direção,Cor,Portas,Final de placa,Vidro elétrico,Trava elétrica,Ar condicionado,Direção hidráulica,Som,Air bag,Alarme,Sensor de ré,Câmera de ré,Blindado,Valor\n', (err) => { if (err) console.log(err.message); });
 
   console.log("Conectando no banco");
@@ -19,7 +24,15 @@ module.export = async () => {
   console.log("Inicio");
   const carros = await dbCarro.find();
   console.log(carros.length);
-  carros.forEach(carro => {
+
+  const bar = new ProgressBar('Saving [:bar] :percent :etas', {
+    complete: '=',
+    incomplete: ' ',
+    width: 20,
+    total: carros.length - 1
+  });
+
+  carros.forEach((carro, idx) => {
     const newCarro = new Carro();
 
     newCarro.setValor(parseFloat(carro.price.substr(3).replace('.', '')))
@@ -28,6 +41,7 @@ module.export = async () => {
     separarCaracteristicas(carro.caracteristicas, newCarro);
 
     newCarro.saveCSV('carros.csv');
+    bar.tick();
   });
 
   console.log('Fim');
@@ -133,3 +147,5 @@ function separarCaracteristicas(caracteristicas, carro) {
     }
   })
 }
+
+MongoToCsv();
