@@ -7,6 +7,7 @@ const ProgressBar = require('progress');
  * Sube todos os carros para o banco de dados (postgres)
  */
 const CsvToPostgres = async () => {
+  console.log("Inicio");
   const client = new pg.Client(config);
 
   client.connect((err) => {
@@ -27,6 +28,7 @@ const CsvToPostgres = async () => {
       });
 
       for (let i = 1; i < linha.length; i++) {
+        if(i == linha.length) console.log("Fim");
         const info = linha[i].split(",");
         let dadoNull = false;
         info.forEach((dado) => {
