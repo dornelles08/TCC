@@ -9,10 +9,11 @@ const ProgressBar = require('progress');
  * e salva em csv para tratamento dos dados
  */
 const MongoToCsv = async () => {
+  console.log("1 - Baixa todos os carros do banco de dados (mongo) e salva em csv para tratamento dos dados");
   fs.writeFile('carros.csv', 'Modelo,Marca,Tipo de veículo,Ano,Quilometragem,Potência do motor,Combustível,Câmbio,Direção,Cor,Portas,Final de placa,Vidro elétrico,Trava elétrica,Ar condicionado,Direção hidráulica,Som,Air bag,Alarme,Sensor de ré,Câmera de ré,Blindado,Valor\n', (err) => { if (err) console.log(err.message); });
 
   console.log("Conectando no banco");
-  await mongoose.connect(
+  const db = await mongoose.connect(
     "mongodb+srv://geral:geral@cluster0.sg3qs.mongodb.net/TCC?retryWrites=true&w=majority",
     {
       useNewUrlParser: true,
@@ -23,7 +24,7 @@ const MongoToCsv = async () => {
 
   console.log("Inicio");
   const carros = await dbCarro.find();
-  console.log(carros.length);
+  db.disconnect()
 
   const bar = new ProgressBar('Saving [:bar] :percent :etas', {
     complete: '=',

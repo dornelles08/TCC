@@ -9,6 +9,7 @@ const ProgressBar = require('progress');
  * Insere no banco de dados (postgres) a relação de codigo (int) com o valor (string)
 */
 const TransformarDados = async () => {
+  console.log("4 - Cria tabelas relacionadas aos atributos que são string. \nInsere no banco de dados (postgres) a relação de codigo (int) com o valor (string)");
   const client = new pg.Client(config);
 
   client.connect((err) => {
@@ -22,15 +23,14 @@ const TransformarDados = async () => {
     width: 20,
     total: files.length - 1
   });
-  files.forEach(file => {
-    loadInfo(file, client);
+  files.forEach((file, index) => {
+    loadInfo(file, client, index, files.length)
     bar.tick();
   })
 
 }
 
-function loadInfo(file, db) {
-
+function loadInfo(file, db, i, filesLength) {
   let data = fs.readFileSync(file, "utf8");
   data = data.split("\n");
   data.pop();
@@ -46,17 +46,25 @@ function loadInfo(file, db) {
   const tableName = file.split('/')[1].replace("Map", "").split(".")[0].toLowerCase();
   db.query(`CREATE TABLE IF NOT EXISTS ${tableName}( 
     id integer primary key, 
-    description varchar(100) 
+    description varchar(100)
   )`);
 
-  data.forEach((options) => {
+  data.forEach((options, index) => {
     const id = parseInt(options[0]);
     const desc = options[1];
-    db.query(`select id from ${tableName} where id = '${id}'`)
-      .then(result => {
+    db.query(`INSERT INTO ${tableName} VALUES ('${id}', '${desc}')`)
+      .then(() => {
         bar.tick();
-        if (result.rows.length === 0) {
-          db.query(`INSERT INTO ${tableName} VALUES ('${id}', '${desc}')`);
+        if (filesLength - 1 === i && data.length - 1 === index) {
+          console.log("Fim");
+          db.end();
+        }
+      })
+      .catch(() => {
+        bar.tick();
+        if (filesLength - 1 === i && data.length - 1 === index) {
+          console.log("Fim");
+          db.end();
         }
       })
   });

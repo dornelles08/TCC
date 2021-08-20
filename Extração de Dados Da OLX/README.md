@@ -27,3 +27,9 @@ node CsvToPostgres.js
 node ConvertStringToCode.js
 node TransdormandoDados.js
 ```
+
+Ou executando o script python main.py
+
+```bash
+python3 main.py
+```

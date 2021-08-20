@@ -8,6 +8,7 @@ const ProgressBar = require('progress');
  * e converte para numerico
  */
 const ConvertStringToCode = async () => {
+  console.log("3 - Tranforma todos os atributos do tipo string e converte para numerico");
   const client = new pg.Client(config);
 
   client.connect((err) => {
@@ -17,20 +18,6 @@ const ConvertStringToCode = async () => {
   const dir = "./Mapeamento";
   if (!fs.existsSync(dir))
     fs.mkdirSync(dir);
-
-  //Modelo
-  client.query('select distinct modelo from carros').then((res => {
-    const bar = new ProgressBar('Converting [:bar] :percent :etas', {
-      complete: '=',
-      incomplete: ' ',
-      width: 20,
-      total: res.rows.length - 1
-    });
-    fs.writeFileSync("Mapeamento/MapModelo.csv", "", (err) => console.log(err.message))
-    res.rows.forEach((linha, index) => {
-      fs.writeFile("Mapeamento/MapModelo.csv", `${index},${linha.modelo}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); bar.tick() })
-    });
-  }));
 
   //Marca
   client.query('select distinct marca from carros').then((res => {
@@ -113,6 +100,24 @@ const ConvertStringToCode = async () => {
     fs.writeFileSync("Mapeamento/MapCor.csv", "", (err) => console.log(err.message))
     res.rows.forEach((linha, index) => {
       fs.writeFile("Mapeamento/MapCor.csv", `${index},${linha.cor}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); bar.tick() })
+    });
+  }));
+
+  //Modelo
+  client.query('select distinct modelo from carros').then((res => {
+    const bar = new ProgressBar('Converting [:bar] :percent :etas', {
+      complete: '=',
+      incomplete: ' ',
+      width: 20,
+      total: res.rows.length - 1
+    });
+    fs.writeFileSync("Mapeamento/MapModelo.csv", "", (err) => console.log(err.message))
+    res.rows.forEach((linha, index) => {
+      fs.writeFile("Mapeamento/MapModelo.csv", `${index},${linha.modelo}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); bar.tick() })
+      if (index === res.rows.length - 1) {
+        console.log("Fim");
+        client.end();
+      }
     });
   }));
 

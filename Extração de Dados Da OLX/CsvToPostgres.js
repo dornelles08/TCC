@@ -4,9 +4,10 @@ const config = require("./config/db");
 const ProgressBar = require('progress');
 
 /**
- * Sube todos os carros para o banco de dados (postgres)
+ * Sobe todos os carros para o banco de dados (postgres)
  */
 const CsvToPostgres = async () => {
+  console.log("2 - Sobe todos os carros para o banco de dados (postgres)");
   console.log("Inicio");
   const client = new pg.Client(config);
 
@@ -28,7 +29,7 @@ const CsvToPostgres = async () => {
       });
 
       for (let i = 1; i < linha.length; i++) {
-        if(i == linha.length) console.log("Fim");
+
         const info = linha[i].split(",");
         let dadoNull = false;
         info.forEach((dado) => {
@@ -46,7 +47,17 @@ const CsvToPostgres = async () => {
           '${info[17]}','${info[18]}','${info[19]}','${info[20]}',
           '${info[21]}','${info[22]}')`;
 
-          client.query(query).then(() => { bar.tick(); }).catch(() => { bar.tick(); });
+          client.query(query).then(() => {
+            bar.tick(); if (i == linha.length - 1) {
+              console.log("Fim");
+              client.end()
+            }
+          }).catch(() => {
+            bar.tick(); if (i == linha.length - 1) {
+              console.log("Fim");
+              client.end()
+            }
+          });
         } else {
           bar.tick();
         }
