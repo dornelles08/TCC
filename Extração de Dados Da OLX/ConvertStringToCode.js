@@ -8,81 +8,113 @@ const ProgressBar = require('progress');
  * e converte para numerico
  */
 const ConvertStringToCode = async () => {
-  const bar = new ProgressBar('Converting [:bar] :percent :etas', {
-    complete: '=',
-    incomplete: ' ',
-    width: 20,
-    total: 7
-  });
-
   const client = new pg.Client(config);
 
   client.connect((err) => {
     if (err) throw err;
   });
 
+  const dir = "./Mapeamento";
+  if (!fs.existsSync(dir))
+    fs.mkdirSync(dir);
+
   //Modelo
   client.query('select distinct modelo from carros').then((res => {
+    const bar = new ProgressBar('Converting [:bar] :percent :etas', {
+      complete: '=',
+      incomplete: ' ',
+      width: 20,
+      total: res.rows.length - 1
+    });
+    fs.writeFileSync("Mapeamento/MapModelo.csv", "", (err) => console.log(err.message))
     res.rows.forEach((linha, index) => {
-      console.log(`${index},${linha.modelo}`);
-      fs.writeFile("Mapeamento/MapModelo.csv", `${index},${linha.modelo}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); })
+      fs.writeFile("Mapeamento/MapModelo.csv", `${index},${linha.modelo}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); bar.tick() })
     });
   }));
-  bar.tick();
 
   //Marca
   client.query('select distinct marca from carros').then((res => {
+    const bar = new ProgressBar('Converting [:bar] :percent :etas', {
+      complete: '=',
+      incomplete: ' ',
+      width: 20,
+      total: res.rows.length - 1
+    });
+    fs.writeFileSync("Mapeamento/MapMarca.csv", "", (err) => console.log(err.message))
     res.rows.forEach((linha, index) => {
-      console.log(`${index},${linha.marca}`);
-      fs.writeFile("Mapeamento/MapMarca.csv", `${index},${linha.marca}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); })
+      fs.writeFile("Mapeamento/MapMarca.csv", `${index},${linha.marca}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); bar.tick() })
     });
   }));
-  bar.tick();
 
   //Tipo do Veiculo
   client.query('select distinct tipoveiculo from carros').then((res => {
+    const bar = new ProgressBar('Converting [:bar] :percent :etas', {
+      complete: '=',
+      incomplete: ' ',
+      width: 20,
+      total: res.rows.length - 1
+    });
+    fs.writeFileSync("Mapeamento/MapTipoVeiculo.csv", "", (err) => console.log(err.message))
     res.rows.forEach((linha, index) => {
-      console.log(`${index},${linha.tipoveiculo}`);
-      fs.writeFile("Mapeamento/MapTipoVeiculo.csv", `${index},${linha.tipoveiculo}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); })
+      fs.writeFile("Mapeamento/MapTipoVeiculo.csv", `${index},${linha.tipoveiculo}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); bar.tick() })
     });
   }));
-  bar.tick();
 
   //Combustivel
   client.query('select distinct combustivel from carros').then((res => {
+    const bar = new ProgressBar('Converting [:bar] :percent :etas', {
+      complete: '=',
+      incomplete: ' ',
+      width: 20,
+      total: res.rows.length - 1
+    });
+    fs.writeFileSync("Mapeamento/MapCombustivel.csv", "", (err) => console.log(err.message))
     res.rows.forEach((linha, index) => {
-      console.log(`${index},${linha.combustivel}`);
-      fs.writeFile("Mapeamento/MapCombustivel.csv", `${index},${linha.combustivel}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); })
+      fs.writeFile("Mapeamento/MapCombustivel.csv", `${index},${linha.combustivel}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); bar.tick() })
     });
   }));
-  bar.tick();
 
   //Cambio
   client.query('select distinct cambio from carros').then((res => {
+    const bar = new ProgressBar('Converting [:bar] :percent :etas', {
+      complete: '=',
+      incomplete: ' ',
+      width: 20,
+      total: res.rows.length - 1
+    });
+    fs.writeFileSync("Mapeamento/MapCambio.csv", "", (err) => console.log(err.message))
     res.rows.forEach((linha, index) => {
-      console.log(`${index},${linha.cambio}`);
-      fs.writeFile("Mapeamento/MapCambio.csv", `${index},${linha.cambio}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); })
+      fs.writeFile("Mapeamento/MapCambio.csv", `${index},${linha.cambio}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); bar.tick() })
     });
   }));
-  bar.tick();
 
   //Direção
   client.query('select distinct direcao from carros').then((res => {
+    const bar = new ProgressBar('Converting [:bar] :percent :etas', {
+      complete: '=',
+      incomplete: ' ',
+      width: 20,
+      total: res.rows.length - 1
+    });
+    fs.writeFileSync("Mapeamento/MapDirecao.csv", "", (err) => console.log(err.message))
     res.rows.forEach((linha, index) => {
-      console.log(`${index},${linha.direcao}`);
-      fs.writeFile("Mapeamento/MapDirecao.csv", `${index},${linha.direcao}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); })
+      fs.writeFile("Mapeamento/MapDirecao.csv", `${index},${linha.direcao}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); bar.tick() })
     });
   }));
-  bar.tick();
 
   //Cor
   client.query('select distinct cor from carros').then((res => {
+    const bar = new ProgressBar('Converting [:bar] :percent :etas', {
+      complete: '=',
+      incomplete: ' ',
+      width: 20,
+      total: res.rows.length - 1
+    });
+    fs.writeFileSync("Mapeamento/MapCor.csv", "", (err) => console.log(err.message))
     res.rows.forEach((linha, index) => {
-      console.log(`${index},${linha.cor}`);
-      fs.writeFile("Mapeamento/MapCor.csv", `${index},${linha.cor}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); })
+      fs.writeFile("Mapeamento/MapCor.csv", `${index},${linha.cor}\n`, { flag: "a" }, (err) => { if (err) console.log(err.message); bar.tick() })
     });
   }));
-  bar.tick();
 
 }
 
