@@ -1,7 +1,7 @@
 const fs = require("fs");
 const pg = require("pg");
 const config = require("./config/db");
-const ProgressBar = require('progress');
+const ProgressBar = require("progress");
 
 /**
  * Sobe todos os carros para o banco de dados (postgres)
@@ -16,20 +16,18 @@ const CsvToPostgres = async () => {
   });
 
   fs.readFile("carros.csv", "utf8", (err, data) => {
-
     if (err) console.log(err.message);
     else {
       const linha = data.split("\n");
 
-      const bar = new ProgressBar('Saving on DB [:bar] :percent :etas', {
-        complete: '=',
-        incomplete: ' ',
+      const bar = new ProgressBar("Saving on DB [:bar] :percent :etas", {
+        complete: "=",
+        incomplete: " ",
         width: 20,
-        total: linha.length - 1
+        total: linha.length - 1,
       });
 
       for (let i = 1; i < linha.length; i++) {
-
         const info = linha[i].split(",");
         let dadoNull = false;
         info.forEach((dado) => {
@@ -47,23 +45,28 @@ const CsvToPostgres = async () => {
           '${info[17]}','${info[18]}','${info[19]}','${info[20]}',
           '${info[21]}','${info[22]}')`;
 
-          client.query(query).then(() => {
-            bar.tick(); if (i == linha.length - 1) {
-              console.log("Fim");
-              client.end()
-            }
-          }).catch(() => {
-            bar.tick(); if (i == linha.length - 1) {
-              console.log("Fim");
-              client.end()
-            }
-          });
+          client
+            .query(query)
+            .then(() => {
+              bar.tick();
+              if (i == linha.length - 1) {
+                console.log("Fim");
+                client.end();
+              }
+            })
+            .catch(() => {
+              bar.tick();
+              if (i == linha.length - 1) {
+                console.log("Fim");
+                client.end();
+              }
+            });
         } else {
           bar.tick();
         }
       }
     }
   });
-}
+};
 
 CsvToPostgres();
