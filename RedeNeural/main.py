@@ -81,6 +81,7 @@ class RN:
 
                 # Forward
                 ypred = net(dado)
+                print(type(ypred))
                 loss = self.criterion(ypred, rotulo)
                 epoch_loss.append(loss.cpu().data)
 
@@ -88,8 +89,8 @@ class RN:
 
         end = time.time()
         # print('********** Validate **********')
-        print('Epoch %d, Loss: %.4f +/- %.4f, Time: %.2f\n' %
-              (epoch, epoch_loss.mean(), epoch_loss.std(), end-start))
+        # print('Epoch %d, Loss: %.4f +/- %.4f, Time: %.2f\n' %
+        #       (epoch, epoch_loss.mean(), epoch_loss.std(), end-start))
 
         return epoch_loss.mean()
 
@@ -139,12 +140,12 @@ class RN:
 
         start = time.time()
 
-        for epoch in range(self.args['num_epochs']):
-            # Train
-            train_losses.append(self.train(train_loader, net, epoch))
+        # for epoch in range(self.args['num_epochs']):
+        #     # Train
+        #     train_losses.append(self.train(train_loader, net, epoch))
 
-            # Validate
-            test_losses.append(self.validate(test_loader, net, epoch))
+        #     # Validate
+        #     test_losses.append(self.validate(test_loader, net, epoch))
 
         end = time.time()
 
@@ -220,13 +221,13 @@ file = "result2.csv"
 df = pd.read_csv(file)
 print(df.shape)
 
-# rn = RN(8e-05, 0.0005, 150, 0, "", df.shape[1]-1)
-# rn.run("result1.csv")
+rn = RN(8e-05, 0.0005, 1, 0, "", df.shape[1]-1)
+rn.run(file)
 
-total = 0
-for lr in lrs:
-    for wd in wds:
-        print(f"Ciclo: {total}")
-        rn = RN(lr, wd, 200, total, prefix, df.shape[1]-1)
-        rn.run(file)
-        total += 1
+# total = 0
+# for lr in lrs:
+#     for wd in wds:
+#         print(f"Ciclo: {total}")
+#         rn = RN(lr, wd, 200, total, prefix, df.shape[1]-1)
+#         rn.run(file)
+#         total += 1
