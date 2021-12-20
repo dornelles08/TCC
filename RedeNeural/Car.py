@@ -21,11 +21,11 @@ class Car(Dataset):
         sample = self.dados[idx][:self.columns]
         label = self.dados[idx][-1:]
 
-        onehotencoder = ColumnTransformer(transformers=[("OneHot", OneHotEncoder(),
-                                                         [0, 1, 5, 6, 7, 8])],
-                                          remainder='passthrough')
+        # onehotencoder = ColumnTransformer(transformers=[("OneHot", OneHotEncoder(),
+        #                                                  [0, 1, 5, 6, 7, 8])],
+        #                                   remainder='passthrough')
 
-        sample = onehotencoder.fit_transform(sample).toarray()
+        # sample = onehotencoder.fit_transform(sample).toarray()
 
         # converte pea tensor
         # sample = torch.tensor(sample, dtype=torch.float)

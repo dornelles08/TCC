@@ -17,7 +17,7 @@ from MLP import MLP
 class RN:
     def __init__(self, lr, wd, epocs, index, prefix, columns):
         self.args = {
-            'batch_size': 20,
+            'batch_size': 1,
             'num_workers': 16,
             'lr': lr,
             'weight_decay': wd,
@@ -56,8 +56,8 @@ class RN:
 
         end = time.time()
         # print('#################### Train ####################')
-        print('Epoch %d, Loss: %.4f +/- %.4f, Time: %.2f' %
-              (epoch, epoch_loss.mean(), epoch_loss.std(), end-start))
+        # print('Epoch %d, Loss: %.4f +/- %.4f, Time: %.2f' %
+        #       (epoch, epoch_loss.mean(), epoch_loss.std(), end-start))
 
         return epoch_loss.mean()
 
@@ -69,11 +69,13 @@ class RN:
         start = time.time()
 
         epoch_loss = []
+        epoch_percent = []
 
         with torch.no_grad():
             for batch in test_loader:
 
                 dado, rotulo = batch
+                original = rotulo[0][0]
 
                 # Cast do dado na GPU
                 dado = dado.to(self.args['device'])
@@ -81,18 +83,20 @@ class RN:
 
                 # Forward
                 ypred = net(dado)
-                print(type(ypred))
                 loss = self.criterion(ypred, rotulo)
+                percent = (loss/original)*100
                 epoch_loss.append(loss.cpu().data)
+                epoch_percent.append(percent)
 
         epoch_loss = np.asarray(epoch_loss)
+        epoch_percent = np.asarray(epoch_percent)
 
         end = time.time()
         # print('********** Validate **********')
         # print('Epoch %d, Loss: %.4f +/- %.4f, Time: %.2f\n' %
         #       (epoch, epoch_loss.mean(), epoch_loss.std(), end-start))
 
-        return epoch_loss.mean()
+        return (epoch_loss.mean(), epoch_percent.mean())
 
     def run(self, arq):
         # Definição do dispositivo de execução, cpu ou gpu
@@ -136,16 +140,18 @@ class RN:
         self.optimizer = optim.Adam(
             net.parameters(), lr=self.args['lr'], weight_decay=self.args['weight_decay'])
 
-        train_losses, test_losses = [], []
+        train_losses, test_losses, teste_perecnt_loss = [], [], []
 
         start = time.time()
 
-        # for epoch in range(self.args['num_epochs']):
-        #     # Train
-        #     train_losses.append(self.train(train_loader, net, epoch))
+        for epoch in range(self.args['num_epochs']):
+            # Train
+            train_losses.append(self.train(train_loader, net, epoch))
 
-        #     # Validate
-        #     test_losses.append(self.validate(test_loader, net, epoch))
+            # Validate
+            valid = self.validate(test_loader, net, epoch)
+            test_losses.append(valid[0])
+            teste_perecnt_loss.append(valid[1])
 
         end = time.time()
 
@@ -162,11 +168,16 @@ class RN:
 
         train_mean_loss = sum(train_losses)/len(train_losses)
         test_mean_loss = sum(test_losses)/len(test_losses)
+        test_mean_percent_loss = sum(
+            teste_perecnt_loss)/len(teste_perecnt_loss)
         print(f"Tempo Total: {int(end-start)} s")
         print(f"Menor Loss de treino: {int(min(train_losses))}")
         print(f"Menor Loss de teste: {int(min(test_losses))}")
         print(f"Loss de treino: {int(train_mean_loss)}")
         print(f"Loss de teste: {int(test_mean_loss)}")
+        print(f"Menor Percent Loss de teste: {int(min(teste_perecnt_loss))}")
+        print(f"Percent Loss de teste: {int(test_mean_percent_loss)}")
+
         if min(test_losses) < 2000:
             plt.figure(figsize=(20, 9))
             plt.plot(train_losses, label='Train')
@@ -221,7 +232,7 @@ file = "result2.csv"
 df = pd.read_csv(file)
 print(df.shape)
 
-rn = RN(8e-05, 0.0005, 1, 0, "", df.shape[1]-1)
+rn = RN(8e-05, 0.0005, 300, 0, "", df.shape[1]-1)
 rn.run(file)
 
 # total = 0
