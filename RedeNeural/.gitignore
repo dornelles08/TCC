@@ -3,3 +3,4 @@ __pycache__
 *.txt
 !result2.csv
 !valorFipe.txt
+!testeSk.csv
