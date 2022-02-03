@@ -85,21 +85,20 @@ listOpcionais = [
   'Blindado'
 ]
 
-uri = "mongodb+srv://geral:geral@cluster0.sg3qs.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+uri = "mongodb+srv://geral:geral@cluster0.sg3qs.mongodb.net/TCC_SP?retryWrites=true&w=majority"
 client = MongoClient(uri)
 db = client['TCC']
 collection = db['carros']
 
 arq = open('carros.csv', 'w')
+arq.write('Modelo,Marca,Tipo de veículo,Ano,Quilometragem,Potência do motor,Combustível,Câmbio,Direção,Cor,Portas,Final de placa,Vidro elétrico,Trava elétrica,Ar condicionado,Direção hidráulica,Som,Air bag,Alarme,Sensor de ré,Câmera de ré,Blindado,Valor\n')
 arq.close()
 arq = open('carros.csv', 'a')
-arq.write('Modelo,Marca,Tipo de veículo,Ano,Quilometragem,Potência do motor,Combustível,Câmbio,Direção,Cor,Portas,Final de placa,Vidro elétrico,Trava elétrica,Ar condicionado,Direção hidráulica,Som,Air bag,Alarme,Sensor de ré,Câmera de ré,Blindado,Valor\n')
 
 print("Buscando Carros - Início")
 carros = list(collection.find())
 print(len(carros))
 print("Buscando Carros - Fim")
-
 
 for carro in carros:  
   newCarro = {}

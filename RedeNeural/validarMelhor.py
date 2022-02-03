@@ -1,6 +1,6 @@
 import json
 
-arq = open("results-Sera?/results.txt", "r")
+arq = open("results-sem_outliers/results.txt", "r")
 
 results = arq.read()
 lines = results.split("\n")
@@ -21,7 +21,7 @@ for line in lines:
 print(f"Index Melhor Resultado: {best_index}")
 print(f"Melhor Resultado: {best_loss}")
 
-f = open("results-Sera?/result-"+str(index)+".txt", "r")
+f = open("results-sem_outliers/result-"+str(index)+".txt", "r")
 lines = f.read().split("\n")
 
 args = lines[0]

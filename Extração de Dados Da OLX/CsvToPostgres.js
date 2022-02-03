@@ -7,6 +7,7 @@ const ProgressBar = require("progress");
  * Sobe todos os carros para o banco de dados (postgres)
  */
 const CsvToPostgres = async () => {
+  config.database = "tcc_sp";
   console.log("2 - Sobe todos os carros para o banco de dados (postgres)");
   console.log("Inicio");
   const client = new pg.Client(config);
@@ -15,7 +16,7 @@ const CsvToPostgres = async () => {
     if (err) throw err;
   });
 
-  fs.readFile("carros.csv", "utf8", (err, data) => {
+  fs.readFile("carros_sp.csv", "utf8", (err, data) => {
     if (err) console.log(err.message);
     else {
       const linha = data.split("\n");
