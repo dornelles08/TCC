@@ -1,0 +1,17 @@
+Quantidade de registros e de colunas: (6140, 11)
+
+Menor Valor de Loss por Época de Treino: 24642.38671875
+Maior Valor de Loss por Época de Treino: 65721.4609375
+Valor Médio de Loss por Época de Treino: 29981.830078125
+
+Menor Valor de Loss por Época de Teste: 24132.009765625
+Maior Valor de Loss por Época de Teste: 64625.2734375
+Valor Médio de Loss por Época de Teste: 30202.142578125
+
+Menor Valor de Loss por Registro de Treino: 9032.3525390625
+Maior Valor de Loss por Registro de Treino: 552951.5625
+Valor Médio de Loss por Registro de Treino: 29981.830078125
+
+Menor Valor de Loss por Registro de Teste: 12385.9775390625
+Maior Valor de Loss por Registro de Teste: 295893.09375
+Valor Médio de Loss por Registro de Teste: 30202.140625
