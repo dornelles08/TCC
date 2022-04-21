@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 class Car(Dataset):
@@ -128,7 +129,7 @@ def validate(test_loader, net, epoch):
 args = {
     'batch_size': 100,
     'num_workers': 16,
-    'epoch_num': 10,
+    'epoch_num': 300,
 }
 
 if torch.cuda.is_available():
@@ -140,8 +141,6 @@ else:
 mypath = './dados'
 
 files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
-
-files = files[0:1]
 
 for file in files:
     print(file)
@@ -189,6 +188,7 @@ for file in files:
     start = time.time()
 
     for epoch in range(args['epoch_num']):
+        print(f"Epoca: {epoch}")
         # Train
         train_losses.append(train(train_loader, net, epoch))
 
@@ -198,34 +198,68 @@ for file in files:
     end = time.time()
     print(end-start)
 
+    train_losses = np.asarray(train_losses)
+    test_losses = np.asarray(test_losses)
+    dif__ = max(train_losses) - min(train_losses)
+
+    if dif__ < 10000:
+        print(dif__)
+        # files.append(file)
+
     file = file.split('.')[0]
 
     Path(f'./resultados/{file}').mkdir(exist_ok=True)
 
-    plt.figure(figsize=(20, 10))
+    plt.figure(figsize=(16, 8))
     plt.plot(train_losses, label='Train')
     plt.plot(test_losses, label='Test', linewidth=3, alpha=0.5)
-    plt.xlabel('Épocas', fontsize=16)
-    plt.ylabel('Loss', fontsize=16)
-    plt.title('Convergência', fontsize=16)
+    plt.xlabel('Épocas', fontsize=20)
+    plt.ylabel('Loss', fontsize=20)
+    plt.title('Convergência', fontsize=20)
     plt.legend()
     plt.savefig(f'./resultados/{file}/epochs_loss_{file}.png', format='png')
 
-    plt.figure(figsize=(20, 10))
-    plt.plot(random.sample(dif_train, 100), label='Train')
-    plt.xlabel('Testes', fontsize=16)
-    plt.ylabel('Diferença', fontsize=16)
-    plt.title('Convergence Treino', fontsize=16)
+    plt.figure(figsize=(16, 8))
+    plt.plot(dif_train[0::50], label='Train')
+    plt.xlabel('Testes', fontsize=20)
+    plt.ylabel('Diferença', fontsize=20)
+    plt.title('Convergence Treino', fontsize=20)
     plt.legend()
     plt.savefig(
         f'./resultados/{file}/car_loss_train_{file}.png', format='png')
 
-    plt.figure(figsize=(20, 10))
-    plt.plot(random.sample(dif_test, 100),
-             label='Test', linewidth=3, alpha=0.5)
-    plt.xlabel('Testes', fontsize=16)
-    plt.ylabel('Diferença', fontsize=16)
-    plt.title('Convergence Teste', fontsize=16)
+    plt.figure(figsize=(16, 8))
+    plt.plot(dif_test[0::50], label='Test', linewidth=3, alpha=0.5)
+    plt.xlabel('Testes', fontsize=20)
+    plt.ylabel('Diferença', fontsize=20)
+    plt.title('Convergence Teste', fontsize=20)
     plt.legend()
     plt.savefig(
         f'./resultados/{file}/car_loss_test_{file}.png', format='png')
+
+    dif_train = np.asarray(dif_train)
+    dif_test = np.asarray(dif_test)
+
+    results = f'''
+Menor Valor de Loss por Época de Treino: {min(train_losses)}
+Maior Valor de Loss por Época de Treino: {max(train_losses)}
+Valor Médio de Loss por Época de Treino: {train_losses.mean()}
+
+Menor Valor de Loss por Época de Teste: {min(test_losses)}
+Maior Valor de Loss por Época de Teste: {max(test_losses)}
+Valor Médio de Loss por Época de Teste: {test_losses.mean()}
+
+Menor Valor de Loss por Registro de Treino: {min(dif_train)}
+Maior Valor de Loss por Registro de Treino: {max(dif_train)}
+Valor Médio de Loss por Registro de Treino: {dif_train.mean()}
+
+Menor Valor de Loss por Registro de Teste: {min(dif_test)}
+Maior Valor de Loss por Registro de Teste: {max(dif_test)}
+Valor Médio de Loss por Registro de Teste: {dif_test.mean()}
+    '''
+
+    if not isfile(f'./resultados/{file}/{file}.txt'):
+        Path(f'./resultados/{file}/{file}.txt').touch(exist_ok=True)
+
+    with open(f'./resultados/{file}/{file}.txt', 'w') as arq:
+        arq.write(results)
