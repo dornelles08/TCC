@@ -127,9 +127,9 @@ def validate(test_loader, net, epoch):
 
 
 args = {
-    'batch_size': 100,
+    'batch_size': 50,
     'num_workers': 16,
-    'epoch_num': 300,
+    'epoch_num': 200,
 }
 
 if torch.cuda.is_available():
@@ -142,20 +142,22 @@ mypath = './dados'
 
 files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
+files = ['se_completo.csv', 'se_corolla.csv', 'sp_fit.csv']
+
 for file in files:
     print(file)
     df = pd.read_csv(f'dados/{file}')
     indices = torch.randperm(len(df)).tolist()
 
     train_size = int(0.8*len(df))
-    print('Separando em dados de treino e de teste')
+    # print('Separando em dados de treino e de teste')
     df_train = df.iloc[indices[:train_size]]
     df_test = df.iloc[indices[train_size:]]
 
     df_train.to_csv('car_train.csv', index=False)
     df_test.to_csv('car_test.csv', index=False)
 
-    print('Criando DataLoaders')
+    # print('Criando DataLoaders')
     train_set = Car('car_train.csv', df.shape[1]-1)
     test_set = Car('car_test.csv', df.shape[1]-1)
 
@@ -169,7 +171,7 @@ for file in files:
                              num_workers=args['num_workers'],
                              shuffle=False)
 
-    print("Criando Rede")
+    # print("Criando Rede")
     input_size = train_set[0][0].shape[0]
     hidden_size = int((train_set[0][0].shape[0] + 1) / 2)
     out_size = 1
@@ -188,10 +190,9 @@ for file in files:
     start = time.time()
 
     for epoch in range(args['epoch_num']):
-        print(f"Epoca: {epoch}")
+        # print(f"Epoca: {epoch}")
         # Train
         train_losses.append(train(train_loader, net, epoch))
-
         # Validate
         test_losses.append(validate(test_loader, net, epoch))
 
@@ -200,47 +201,71 @@ for file in files:
 
     train_losses = np.asarray(train_losses)
     test_losses = np.asarray(test_losses)
-    dif__ = max(train_losses) - min(train_losses)
 
-    if dif__ < 10000:
-        print(dif__)
-        # files.append(file)
+    print(f''' 
+tamanho list -> {len(df)}
+train_losses -> {len(train_losses)}
+test_losses  -> {len(test_losses)}
+LossMin      -> {min(train_losses)}
+dif_train    -> {len(dif_train)}
+dif_test     -> {len(dif_test)}
+    ''')
 
-    file = file.split('.')[0]
+    fileName = file.split('.')[0]
+    Path(f'./resultados/{fileName}').mkdir(exist_ok=True)
 
-    Path(f'./resultados/{file}').mkdir(exist_ok=True)
+    if min(train_losses) > 25000:
+        print("Repetindo...")
+        print("---------------")
+        print()
+        files.append(file)
+        continue
 
-    plt.figure(figsize=(16, 8))
-    plt.plot(train_losses, label='Train')
-    plt.plot(test_losses, label='Test', linewidth=3, alpha=0.5)
-    plt.xlabel('Épocas', fontsize=20)
-    plt.ylabel('Loss', fontsize=20)
-    plt.title('Convergência', fontsize=20)
-    plt.legend()
-    plt.savefig(f'./resultados/{file}/epochs_loss_{file}.png', format='png')
+    pd.Series(train_losses).to_csv(
+        f'./resultados/{fileName}/train_loss_epoch_{fileName}.csv', index=False, header=False)
+    pd.Series(test_losses).to_csv(
+        f'./resultados/{fileName}/test_loss_epoch_{fileName}.csv', index=False, header=False)
+    pd.Series(dif_train).to_csv(
+        f'./resultados/{fileName}/train_loss_{fileName}.csv', index=False, header=False)
+    pd.Series(dif_test).to_csv(
+        f'./resultados/{fileName}/test_loss_{fileName}.csv', index=False, header=False)
 
-    plt.figure(figsize=(16, 8))
-    plt.plot(dif_train[0::50], label='Train')
-    plt.xlabel('Testes', fontsize=20)
-    plt.ylabel('Diferença', fontsize=20)
-    plt.title('Convergence Treino', fontsize=20)
-    plt.legend()
-    plt.savefig(
-        f'./resultados/{file}/car_loss_train_{file}.png', format='png')
+    torch.save(net, f'./resultados/{fileName}/modelo_{fileName}')
 
-    plt.figure(figsize=(16, 8))
-    plt.plot(dif_test[0::50], label='Test', linewidth=3, alpha=0.5)
-    plt.xlabel('Testes', fontsize=20)
-    plt.ylabel('Diferença', fontsize=20)
-    plt.title('Convergence Teste', fontsize=20)
-    plt.legend()
-    plt.savefig(
-        f'./resultados/{file}/car_loss_test_{file}.png', format='png')
+
+#     plt.figure(figsize=(16, 8))
+#     plt.plot(train_losses, label='Train')
+#     plt.plot(test_losses, label='Test', linewidth=3, alpha=0.5)
+#     plt.xlabel('Épocas', fontsize=20)
+#     plt.ylabel('Loss', fontsize=20)
+#     plt.title('Convergência', fontsize=20)
+#     plt.legend()
+#     plt.savefig(f'./resultados/{fileName}/epochs_loss_{fileName}.png', format='png')
+
+#     plt.figure(figsize=(16, 8))
+#     plt.plot(dif_train, label='Train')
+#     plt.xlabel('Testes', fontsize=20)
+#     plt.ylabel('Diferença', fontsize=20)
+#     plt.title('Convergence Treino', fontsize=20)
+#     plt.legend()
+#     plt.savefig(
+#         f'./resultados/{fileName}/car_loss_train_{fileName}.png', format='png')
+
+#     plt.figure(figsize=(16, 8))
+#     plt.plot(dif_test, label='Test', linewidth=3, alpha=0.5)
+#     plt.xlabel('Testes', fontsize=20)
+#     plt.ylabel('Diferença', fontsize=20)
+#     plt.title('Convergence Teste', fontsize=20)
+#     plt.legend()
+#     plt.savefig(
+#         f'./resultados/{fileName}/car_loss_test_{fileName}.png', format='png')
 
     dif_train = np.asarray(dif_train)
     dif_test = np.asarray(dif_test)
 
     results = f'''
+Quantidade de registros no Dataset: {len(df)}
+
 Menor Valor de Loss por Época de Treino: {min(train_losses)}
 Maior Valor de Loss por Época de Treino: {max(train_losses)}
 Valor Médio de Loss por Época de Treino: {train_losses.mean()}
@@ -257,9 +282,10 @@ Menor Valor de Loss por Registro de Teste: {min(dif_test)}
 Maior Valor de Loss por Registro de Teste: {max(dif_test)}
 Valor Médio de Loss por Registro de Teste: {dif_test.mean()}
     '''
+    print(results)
 
-    if not isfile(f'./resultados/{file}/{file}.txt'):
-        Path(f'./resultados/{file}/{file}.txt').touch(exist_ok=True)
+    if not isfile(f'./resultados/{fileName}/{fileName}.txt'):
+        Path(f'./resultados/{fileName}/{fileName}.txt').touch(exist_ok=True)
 
-    with open(f'./resultados/{file}/{file}.txt', 'w') as arq:
+    with open(f'./resultados/{fileName}/{fileName}.txt', 'w') as arq:
         arq.write(results)
