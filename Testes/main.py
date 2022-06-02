@@ -32,6 +32,12 @@ class Car(Dataset):
     def __len__(self):
         return len(self.dados)
 
+    def getRotulo(self):
+        rotulos = []
+        for dado in self.dados:
+            rotulos.append(dado[-1:][0])
+        return rotulos
+
 
 class MLP(nn.Module):
     def __init__(self, input_size, hidden_size, out_size):
@@ -129,7 +135,7 @@ def validate(test_loader, net, epoch):
 args = {
     'batch_size': 50,
     'num_workers': 16,
-    'epoch_num': 200,
+    'epoch_num': 1,
 }
 
 if torch.cuda.is_available():
@@ -138,11 +144,12 @@ else:
     args['device'] = torch.device('cpu')
 
 
-mypath = './dados'
+# mypath = './dados'
 
-files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+# files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
-files = ['se_completo.csv', 'se_corolla.csv', 'sp_fit.csv']
+# files = ['sp_ka.csv', 'sp_hb20.csv']
+files = ['sp_ka.csv']
 
 for file in files:
     print(file)
@@ -214,9 +221,10 @@ dif_test     -> {len(dif_test)}
     fileName = file.split('.')[0]
     Path(f'./resultados/{fileName}').mkdir(exist_ok=True)
 
-    if min(train_losses) > 25000:
+    if min(train_losses) > 5000:
+        break
         print("Repetindo...")
-        print("---------------")
+        print("---------------------------------------------------------------------------")
         print()
         files.append(file)
         continue
@@ -231,34 +239,6 @@ dif_test     -> {len(dif_test)}
         f'./resultados/{fileName}/test_loss_{fileName}.csv', index=False, header=False)
 
     torch.save(net, f'./resultados/{fileName}/modelo_{fileName}')
-
-
-#     plt.figure(figsize=(16, 8))
-#     plt.plot(train_losses, label='Train')
-#     plt.plot(test_losses, label='Test', linewidth=3, alpha=0.5)
-#     plt.xlabel('Épocas', fontsize=20)
-#     plt.ylabel('Loss', fontsize=20)
-#     plt.title('Convergência', fontsize=20)
-#     plt.legend()
-#     plt.savefig(f'./resultados/{fileName}/epochs_loss_{fileName}.png', format='png')
-
-#     plt.figure(figsize=(16, 8))
-#     plt.plot(dif_train, label='Train')
-#     plt.xlabel('Testes', fontsize=20)
-#     plt.ylabel('Diferença', fontsize=20)
-#     plt.title('Convergence Treino', fontsize=20)
-#     plt.legend()
-#     plt.savefig(
-#         f'./resultados/{fileName}/car_loss_train_{fileName}.png', format='png')
-
-#     plt.figure(figsize=(16, 8))
-#     plt.plot(dif_test, label='Test', linewidth=3, alpha=0.5)
-#     plt.xlabel('Testes', fontsize=20)
-#     plt.ylabel('Diferença', fontsize=20)
-#     plt.title('Convergence Teste', fontsize=20)
-#     plt.legend()
-#     plt.savefig(
-#         f'./resultados/{fileName}/car_loss_test_{fileName}.png', format='png')
 
     dif_train = np.asarray(dif_train)
     dif_test = np.asarray(dif_test)
@@ -282,7 +262,6 @@ Menor Valor de Loss por Registro de Teste: {min(dif_test)}
 Maior Valor de Loss por Registro de Teste: {max(dif_test)}
 Valor Médio de Loss por Registro de Teste: {dif_test.mean()}
     '''
-    print(results)
 
     if not isfile(f'./resultados/{fileName}/{fileName}.txt'):
         Path(f'./resultados/{fileName}/{fileName}.txt').touch(exist_ok=True)
