@@ -135,7 +135,7 @@ def validate(test_loader, net, epoch):
 args = {
     'batch_size': 50,
     'num_workers': 16,
-    'epoch_num': 1,
+    'epoch_num': 200,
 }
 
 if torch.cuda.is_available():
@@ -149,7 +149,7 @@ else:
 # files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
 # files = ['sp_ka.csv', 'sp_hb20.csv']
-files = ['sp_ka.csv']
+files = ['sp_ka.csv', 'sp_ka.csv', 'sp_ka.csv']
 
 for file in files:
     print(file)
@@ -218,27 +218,27 @@ dif_train    -> {len(dif_train)}
 dif_test     -> {len(dif_test)}
     ''')
 
-    fileName = file.split('.')[0]
-    Path(f'./resultados/{fileName}').mkdir(exist_ok=True)
+    # fileName = file.split('.')[0]
+    # Path(f'./resultados/{fileName}').mkdir(exist_ok=True)
 
-    if min(train_losses) > 5000:
-        break
-        print("Repetindo...")
-        print("---------------------------------------------------------------------------")
-        print()
-        files.append(file)
-        continue
+    # if min(train_losses) > 5000:
+    #     break
+    #     print("Repetindo...")
+    #     print("---------------------------------------------------------------------------")
+    #     print()
+    #     files.append(file)
+    #     continue
 
-    pd.Series(train_losses).to_csv(
-        f'./resultados/{fileName}/train_loss_epoch_{fileName}.csv', index=False, header=False)
-    pd.Series(test_losses).to_csv(
-        f'./resultados/{fileName}/test_loss_epoch_{fileName}.csv', index=False, header=False)
-    pd.Series(dif_train).to_csv(
-        f'./resultados/{fileName}/train_loss_{fileName}.csv', index=False, header=False)
-    pd.Series(dif_test).to_csv(
-        f'./resultados/{fileName}/test_loss_{fileName}.csv', index=False, header=False)
+    # pd.Series(train_losses).to_csv(
+    #     f'./resultados/{fileName}/train_loss_epoch_{fileName}.csv', index=False, header=False)
+    # pd.Series(test_losses).to_csv(
+    #     f'./resultados/{fileName}/test_loss_epoch_{fileName}.csv', index=False, header=False)
+    # pd.Series(dif_train).to_csv(
+    #     f'./resultados/{fileName}/train_loss_{fileName}.csv', index=False, header=False)
+    # pd.Series(dif_test).to_csv(
+    #     f'./resultados/{fileName}/test_loss_{fileName}.csv', index=False, header=False)
 
-    torch.save(net, f'./resultados/{fileName}/modelo_{fileName}')
+    # torch.save(net, f'./resultados/{fileName}/modelo_{fileName}')
 
     dif_train = np.asarray(dif_train)
     dif_test = np.asarray(dif_test)
@@ -263,8 +263,8 @@ Maior Valor de Loss por Registro de Teste: {max(dif_test)}
 Valor Médio de Loss por Registro de Teste: {dif_test.mean()}
     '''
 
-    if not isfile(f'./resultados/{fileName}/{fileName}.txt'):
-        Path(f'./resultados/{fileName}/{fileName}.txt').touch(exist_ok=True)
+    # if not isfile(f'./resultados/{fileName}/{fileName}.txt'):
+    #     Path(f'./resultados/{fileName}/{fileName}.txt').touch(exist_ok=True)
 
-    with open(f'./resultados/{fileName}/{fileName}.txt', 'w') as arq:
-        arq.write(results)
+    # with open(f'./resultados/{fileName}/{fileName}.txt', 'w') as arq:
+    #     arq.write(results)
