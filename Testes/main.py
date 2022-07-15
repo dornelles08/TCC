@@ -6,6 +6,7 @@ import time
 
 import torch
 from torch import nn, optim
+from torch.nn.functional import normalize
 from torch.utils.data import DataLoader, Dataset
 
 import numpy as np
@@ -26,6 +27,8 @@ class Car(Dataset):
 
         sample = torch.from_numpy(sample.astype(np.float32))
         label = torch.from_numpy(label.astype(np.float32))
+
+        sample = normalize(sample, p=2.0,dim=0)
 
         return sample, label
 
@@ -133,9 +136,9 @@ def validate(test_loader, net, epoch):
 
 
 args = {
-    'batch_size': 50,
+    'batch_size': 100,
     'num_workers': 16,
-    'epoch_num': 200,
+    'epoch_num': 300,
 }
 
 if torch.cuda.is_available():
@@ -149,7 +152,7 @@ else:
 # files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
 # files = ['sp_ka.csv', 'sp_hb20.csv']
-files = ['sp_ka.csv', 'sp_ka.csv', 'sp_ka.csv']
+files = ['sp_ka.csv',"SP_KA_WEKA.arff.csv"]
 
 for file in files:
     print(file)
@@ -180,7 +183,7 @@ for file in files:
 
     # print("Criando Rede")
     input_size = train_set[0][0].shape[0]
-    hidden_size = int((train_set[0][0].shape[0] + 1) / 2)
+    hidden_size = (train_set[0][0].shape[0] + 1)
     out_size = 1
 
     net = MLP(input_size, hidden_size, out_size).to(args['device'])
@@ -188,7 +191,7 @@ for file in files:
     criterion = nn.L1Loss().to(args['device'])
     diferenca = nn.L1Loss().to(args['device'])
 
-    optimizer = optim.Adam(net.parameters())
+    optimizer = optim.Adadelta(net.parameters())
 
     dif_train, dif_test = [], []
 
@@ -213,7 +216,7 @@ for file in files:
 tamanho list -> {len(df)}
 train_losses -> {len(train_losses)}
 test_losses  -> {len(test_losses)}
-LossMin      -> {min(train_losses)}
+LossMedia    -> {train_losses.mean()}
 dif_train    -> {len(dif_train)}
 dif_test     -> {len(dif_test)}
     ''')

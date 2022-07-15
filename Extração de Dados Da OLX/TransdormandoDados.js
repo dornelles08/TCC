@@ -9,7 +9,7 @@ const ProgressBar = require("progress");
  * Insere no banco de dados (postgres) a relação de codigo (int) com o valor (string)
  */
 const TransformarDados = async () => {
-  config.database = "tcc_sp";
+  config.database = "TCC_SP";
   console.log(
     "4 - Cria tabelas relacionadas aos atributos que são string. \nInsere no banco de dados (postgres) a relação de codigo (int) com o valor (string)"
   );

@@ -8,7 +8,7 @@ const ProgressBar = require("progress");
  * e converte para numerico
  */
 const ConvertStringToCode = async () => {
-  config.database = "tcc_sp";
+  config.database = "TCC_SP";
   console.log(
     "3 - Tranforma todos os atributos do tipo string e converte para numerico"
   );

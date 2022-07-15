@@ -7,7 +7,7 @@ const ProgressBar = require("progress");
  * Sobe todos os carros para o banco de dados (postgres)
  */
 const CsvToPostgres = async () => {
-  config.database = "tcc_sp";
+  config.database = "TCC_SP";
   console.log("2 - Sobe todos os carros para o banco de dados (postgres)");
   console.log("Inicio");
   const client = new pg.Client(config);

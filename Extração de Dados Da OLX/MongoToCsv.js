@@ -13,7 +13,7 @@ const MongoToCsv = async () => {
     "1 - Baixa todos os carros do banco de dados (mongo) e salva em csv para tratamento dos dados"
   );
   fs.writeFile(
-    "carros.csv",
+    "carros_sp.csv",
     "Modelo,Marca,Tipo de veículo,Ano,Quilometragem,Potência do motor,Combustível,Câmbio,Direção,Cor,Portas,Final de placa,Vidro elétrico,Trava elétrica,Ar condicionado,Direção hidráulica,Som,Air bag,Alarme,Sensor de ré,Câmera de ré,Blindado,Valor\n",
     (err) => {
       if (err) console.log(err.message);
@@ -31,7 +31,7 @@ const MongoToCsv = async () => {
   console.log("Conecxão estabelecida");
 
   console.log("Inicio");
-  const limit = 1000;
+  const limit = 10000;
   let skip = 0;
   while (true) {
     const carros = await dbCarro.find().limit(limit).skip(skip);
