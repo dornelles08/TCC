@@ -1,0 +1,19 @@
+
+Quantidade de registros no Dataset: 175
+
+Menor Valor de Loss por Época de Treino: 20790.59375
+Maior Valor de Loss por Época de Treino: 59031.55078125
+Valor Médio de Loss por Época de Treino: 29472.90234375
+
+Menor Valor de Loss por Época de Teste: 23968.87109375
+Maior Valor de Loss por Época de Teste: 61432.1015625
+Valor Médio de Loss por Época de Teste: 32574.05078125
+
+Menor Valor de Loss por Registro de Treino: 16553.99609375
+Maior Valor de Loss por Registro de Treino: 60413.3046875
+Valor Médio de Loss por Registro de Treino: 29472.904296875
+
+Menor Valor de Loss por Registro de Teste: 23968.87109375
+Maior Valor de Loss por Registro de Teste: 61432.1015625
+Valor Médio de Loss por Registro de Teste: 32574.05078125
+    

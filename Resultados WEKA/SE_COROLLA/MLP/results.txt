@@ -1,0 +1,111 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.MultilayerPerceptron -L 0.001 -M 0.2 -N 500 -V 0 -S 0 -E 20 -H a
+Relation:     SE_COROLLA-weka.filters.unsupervised.attribute.OrdinalToNumeric-Rfirst-last-weka.filters.unsupervised.attribute.Normalize-S1.0-T0.0
+Instances:    293
+Attributes:   11
+              modelo
+              marca
+              combustivel
+              cambio
+              direcao
+              cor
+              ano
+              quilometragem
+              potenciamotor
+              blindado
+              valor
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+Linear Node 0
+    Inputs    Weights
+    Threshold    -0.22779590089178195
+    Node 1    0.47358841556219805
+    Node 2    0.2814340332564517
+    Node 3    1.1764987228437485
+    Node 4    0.07936803812387241
+    Node 5    -0.7047259807396832
+Sigmoid Node 1
+    Inputs    Weights
+    Threshold    -0.024864387113970782
+    Attrib modelo    -0.024946382351135957
+    Attrib marca    -0.020223861817994817
+    Attrib combustivel    0.07655135861156923
+    Attrib cambio    0.023083822570904286
+    Attrib direcao    -0.01324601587182083
+    Attrib cor    -0.052547951053205595
+    Attrib ano    0.5067415615357989
+    Attrib quilometragem    -0.09720693479912342
+    Attrib potenciamotor    -0.0317500659467571
+    Attrib blindado    0.017027797387903346
+Sigmoid Node 2
+    Inputs    Weights
+    Threshold    0.025437195828496715
+    Attrib modelo    0.02355403649811287
+    Attrib marca    0.025847087995515772
+    Attrib combustivel    0.0020282376313971273
+    Attrib cambio    -0.025383354763245318
+    Attrib direcao    0.005712371517113058
+    Attrib cor    -0.025637772823714256
+    Attrib ano    0.3111526002509256
+    Attrib quilometragem    -0.12369066863010289
+    Attrib potenciamotor    0.01910549864179663
+    Attrib blindado    -0.005824324825589241
+Sigmoid Node 3
+    Inputs    Weights
+    Threshold    -0.17124509442468877
+    Attrib modelo    -0.0408853438074073
+    Attrib marca    -0.04534119709180913
+    Attrib combustivel    0.2536230212320175
+    Attrib cambio    0.10595661248209513
+    Attrib direcao    0.12576587027521763
+    Attrib cor    0.08538484706939742
+    Attrib ano    1.2186662712857435
+    Attrib quilometragem    -0.21667951959330262
+    Attrib potenciamotor    -0.14649508661346347
+    Attrib blindado    0.19386053270186981
+Sigmoid Node 4
+    Inputs    Weights
+    Threshold    -0.03314136751757992
+    Attrib modelo    -0.023545261551367602
+    Attrib marca    -0.04139314321016965
+    Attrib combustivel    -0.03144279672845025
+    Attrib cambio    0.004921237458191343
+    Attrib direcao    -0.027276988905054218
+    Attrib cor    -0.020970728436540208
+    Attrib ano    0.12437062310043916
+    Attrib quilometragem    -0.06586293118465882
+    Attrib potenciamotor    0.014316744808262775
+    Attrib blindado    -0.025497882077814456
+Sigmoid Node 5
+    Inputs    Weights
+    Threshold    0.044005371202005795
+    Attrib modelo    -0.031133174223040818
+    Attrib marca    0.03922236965205332
+    Attrib combustivel    -0.14370583627784753
+    Attrib cambio    0.0254366832878502
+    Attrib direcao    0.019548487674215423
+    Attrib cor    -0.028846235329716485
+    Attrib ano    -0.6422929694413086
+    Attrib quilometragem    0.11349880821790376
+    Attrib potenciamotor    0.04404910606306143
+    Attrib blindado    -0.09686963758086425
+Class 
+    Input
+    Node 0
+
+
+Time taken to build model: 0.11 seconds
+
+=== Cross-validation ===
+=== Summary ===
+
+Correlation coefficient                  0.9396
+Mean absolute error                   3019.7197
+Root mean squared error               4233.6142
+Relative absolute error                 26.9823 %
+Root relative squared error             34.0956 %
+Total Number of Instances              293     
+

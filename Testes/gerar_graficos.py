@@ -16,18 +16,6 @@ for file in files:
     dif_test = pd.read_csv(
         f'./resultados/{file}/test_loss_{file}.csv', names=colnames, header=None)
 
-    temp = []
-    for index, row in dif_train.iterrows():
-        temp.append(float(row.Loss[7:-1]))
-
-    dif_train = pd.DataFrame({"Loss": temp})
-
-    temp = []
-    for index, row in dif_test.iterrows():
-        temp.append(float(row.Loss[7:-1]))
-
-    dif_test = pd.DataFrame({"Loss": temp})
-
     plt.rc('legend', fontsize=15)
     plt.rcParams['font.size'] = '15'
 
@@ -37,7 +25,7 @@ for file in files:
     plt.xlabel('Épocas', fontsize=20)
     plt.ylabel('Loss', fontsize=20)
     plt.title('Convergência', fontsize=20)
-    plt.legend()
+    plt.legend(["Treino", "Teste"])
     plt.savefig(
         f'./resultados/{file}/epochs_loss_{file}.png', format='png')
 

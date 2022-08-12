@@ -1,19 +1,29 @@
 
 Quantidade de registros no Dataset: 24631
 
-Menor Valor de Loss por Época de Treino: 17797.3046875
-Maior Valor de Loss por Época de Treino: 51930.30859375
-Valor Médio de Loss por Época de Treino: 22497.419921875
+Porcentagem Média de Treino: 27.98165793746563
+Porcentagem Média de Teste: 33.666345876986796
 
-Menor Valor de Loss por Época de Teste: 17224.193359375
-Maior Valor de Loss por Época de Teste: 37394.203125
-Valor Médio de Loss por Época de Teste: 22321.689453125
+Menor Valor de Loss por Época de Treino: 18398.890625
+Maior Valor de Loss por Época de Treino: 36116.5078125
+Valor Médio de Loss por Época de Treino: 20942.642578125
 
-Menor Valor de Loss por Registro de Treino: 3017.15625
-Maior Valor de Loss por Registro de Treino: 199084.359375
-Valor Médio de Loss por Registro de Treino: 22497.419921875
+Menor Valor de Loss por Época de Teste: 17259.033203125
+Maior Valor de Loss por Época de Teste: 95410.2734375
+Valor Médio de Loss por Época de Teste: 25737.546875
 
-Menor Valor de Loss por Registro de Teste: 9083.3583984375
-Maior Valor de Loss por Registro de Teste: 54196.19921875
-Valor Médio de Loss por Registro de Teste: 22321.689453125
-    
+Menor Valor de Loss por Registro de Treino: 1888.0400390625
+Maior Valor de Loss por Registro de Treino: 113938.9375
+Valor Médio de Loss por Registro de Treino: 20942.642578125
+
+Menor Valor de Loss por Registro de Teste: 11921.3603515625
+Maior Valor de Loss por Registro de Teste: 108741.90625
+Valor Médio de Loss por Registro de Teste: 25737.546875
+
+Menor Valor de Abs Loss por Registro de Treino: 0.0
+Maior Valor de Abs Loss por Registro de Treino: 2905216.0
+Valor Médio de Abs Loss por Registro de Treino: 20938.433283187784
+
+Menor Valor de Abs Loss por Registro de Teste: 0.05078125
+Maior Valor de Abs Loss por Registro de Teste: 738490.64453125
+Valor Médio de Abs Loss por Registro de Teste: 25469.030995071334

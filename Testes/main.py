@@ -28,7 +28,7 @@ class Car(Dataset):
         sample = torch.from_numpy(sample.astype(np.float32))
         label = torch.from_numpy(label.astype(np.float32))
 
-        sample = normalize(sample, p=2.0,dim=0)
+        # sample = normalize(sample, p=2.0, dim=0)
 
         return sample, label
 
@@ -72,7 +72,6 @@ def train(train_loader, net, epoch):
     # Training mode
     net.train()
     epoch_loss = []
-    epoch_dif = []
 
     for batch in train_loader:
         dado, rotulo = batch
@@ -85,12 +84,20 @@ def train(train_loader, net, epoch):
 
         # Forward
         ypred = net(dado)
+
         loss = criterion(ypred, rotulo)
+
+        percent = (abs(rotulo-ypred) / rotulo)*100
+
+        for i in range(len(rotulo)):
+            abs_dif_train.append(abs((rotulo[i].item())-(ypred[i].item())))
+
+        for p in percent:
+            percent_train.append(p.item())
 
         dif = diferenca(ypred, rotulo)
         dif_train.append(dif.cpu().data)
 
-        epoch_dif.append(dif.cpu().data)
         epoch_loss.append(loss.cpu().data)
 
         # Backpropagation
@@ -98,7 +105,6 @@ def train(train_loader, net, epoch):
         optimizer.step()
 
     epoch_loss = np.asarray(epoch_loss)
-    epoch_dif = np.asarray(epoch_dif)
 
     return epoch_loss.mean()
 
@@ -123,6 +129,14 @@ def validate(test_loader, net, epoch):
             ypred = net(dado)
             loss = criterion(ypred, rotulo)
 
+            percent = (abs(rotulo-ypred) / rotulo)*100
+
+            for i in range(len(rotulo)):
+                abs_dif_test.append(abs((rotulo[i].item())-(ypred[i].item())))
+
+            for p in percent:
+                percent_test.append(p.item())
+
             dif = diferenca(ypred, rotulo)
             dif_test.append(dif.cpu().data)
 
@@ -146,28 +160,38 @@ if torch.cuda.is_available():
 else:
     args['device'] = torch.device('cpu')
 
-
 # mypath = './dados'
 
 # files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
-# files = ['sp_ka.csv', 'sp_hb20.csv']
-files = ['sp_ka.csv',"SP_KA_WEKA.arff.csv"]
+files = [
+    {"file": "se_corolla.csv", "minValue": 13000},
+    {"file": "sp_ka.csv", "minValue": 4500},
+    {"file": "sp_hb20.csv", "minValue": 5500},
+    {"file": "sp_fit.csv", "minValue": 11000},
+    {"file": "se_onix.csv", "minValue": 11000},
+    {"file": "se_completo.csv", "minValue": 23000},
+    {"file": "sp_completo.csv", "minValue": 21000},
+]
 
-for file in files:
+for item in files:
+    print(item)
+    file = item["file"]
     print(file)
+
+    prep_data_inicio = time.time()
     df = pd.read_csv(f'dados/{file}')
     indices = torch.randperm(len(df)).tolist()
 
     train_size = int(0.8*len(df))
-    # print('Separando em dados de treino e de teste')
+    print('Separando em dados de treino e de teste')
     df_train = df.iloc[indices[:train_size]]
     df_test = df.iloc[indices[train_size:]]
 
     df_train.to_csv('car_train.csv', index=False)
     df_test.to_csv('car_test.csv', index=False)
 
-    # print('Criando DataLoaders')
+    print('Criando DataLoaders')
     train_set = Car('car_train.csv', df.shape[1]-1)
     test_set = Car('car_test.csv', df.shape[1]-1)
 
@@ -181,7 +205,11 @@ for file in files:
                              num_workers=args['num_workers'],
                              shuffle=False)
 
-    # print("Criando Rede")
+    prep_data_fim = time.time()
+    print(f"Tempo preparando dados: {prep_data_fim-prep_data_inicio}")
+
+    config_inicio = time.time()
+    print("Criando Rede")
     input_size = train_set[0][0].shape[0]
     hidden_size = (train_set[0][0].shape[0] + 1)
     out_size = 1
@@ -194,6 +222,11 @@ for file in files:
     optimizer = optim.Adadelta(net.parameters())
 
     dif_train, dif_test = [], []
+    percent_train, percent_test = [], []
+    abs_dif_train, abs_dif_test = [], []
+
+    config_fim = time.time()
+    print(f"Tempo Configurando Parametros: {config_fim-config_inicio}")
 
     print('Treinamento')
     train_losses, test_losses = [], []
@@ -207,47 +240,67 @@ for file in files:
         test_losses.append(validate(test_loader, net, epoch))
 
     end = time.time()
-    print(end-start)
+    print(f"Tempo de Treinamento e Testes: {end-start}")
+
+    start = time.time()
 
     train_losses = np.asarray(train_losses)
     test_losses = np.asarray(test_losses)
 
-    print(f''' 
-tamanho list -> {len(df)}
-train_losses -> {len(train_losses)}
-test_losses  -> {len(test_losses)}
-LossMedia    -> {train_losses.mean()}
-dif_train    -> {len(dif_train)}
-dif_test     -> {len(dif_test)}
-    ''')
+    percent_train = np.asarray(percent_train)
+    percent_test = np.asarray(percent_test)
 
-    # fileName = file.split('.')[0]
-    # Path(f'./resultados/{fileName}').mkdir(exist_ok=True)
-
-    # if min(train_losses) > 5000:
-    #     break
-    #     print("Repetindo...")
-    #     print("---------------------------------------------------------------------------")
-    #     print()
-    #     files.append(file)
-    #     continue
-
-    # pd.Series(train_losses).to_csv(
-    #     f'./resultados/{fileName}/train_loss_epoch_{fileName}.csv', index=False, header=False)
-    # pd.Series(test_losses).to_csv(
-    #     f'./resultados/{fileName}/test_loss_epoch_{fileName}.csv', index=False, header=False)
-    # pd.Series(dif_train).to_csv(
-    #     f'./resultados/{fileName}/train_loss_{fileName}.csv', index=False, header=False)
-    # pd.Series(dif_test).to_csv(
-    #     f'./resultados/{fileName}/test_loss_{fileName}.csv', index=False, header=False)
-
-    # torch.save(net, f'./resultados/{fileName}/modelo_{fileName}')
+    abs_dif_train = np.asarray(abs_dif_train)
+    abs_dif_test = np.asarray(abs_dif_test)
 
     dif_train = np.asarray(dif_train)
     dif_test = np.asarray(dif_test)
 
+    print(f''' 
+Tamanho List  -> {len(df)}
+Percentual    -> {percent_train.mean()}
+LossMedia     -> {train_losses.mean()}
+LossAbsMedia  -> {dif_train.mean()}
+    ''')
+
+    fileName = file.split('.')[0]
+    Path(f'./resultados/{fileName}').mkdir(exist_ok=True)
+
+    if not isfile(f'./resultados/{fileName}.txt'):
+        Path(f'./resultados/{fileName}.txt').touch(exist_ok=True)
+
+    with open(f'./resultados/{fileName}.txt', 'a') as arq:
+        arq.write(f'{train_losses.mean()}\n')
+
+    if train_losses.mean() > item["minValue"]:
+        print("Repetindo...")
+        print("---------------------------------------------------------------------------")
+        print()
+        files.append(item)
+        continue
+
+    pd.Series(train_losses).to_csv(
+        f'./resultados/{fileName}/train_loss_epoch_{fileName}.csv', index=False, header=False)
+    pd.Series(test_losses).to_csv(
+        f'./resultados/{fileName}/test_loss_epoch_{fileName}.csv', index=False, header=False)
+
+    pd.Series(dif_train).to_csv(
+        f'./resultados/{fileName}/train_loss_{fileName}.csv', index=False, header=False)
+    pd.Series(dif_test).to_csv(
+        f'./resultados/{fileName}/test_loss_{fileName}.csv', index=False, header=False)
+
+    pd.Series(abs_dif_train).to_csv(
+        f'./resultados/{fileName}/abs_train_loss_{fileName}.csv', index=False, header=False)
+    pd.Series(abs_dif_test).to_csv(
+        f'./resultados/{fileName}/abs_test_loss_{fileName}.csv', index=False, header=False)
+
+    torch.save(net, f'./resultados/{fileName}/modelo_{fileName}')
+
     results = f'''
 Quantidade de registros no Dataset: {len(df)}
+
+Porcentagem Média de Treino: {percent_train.mean()}
+Porcentagem Média de Teste: {percent_test.mean()}
 
 Menor Valor de Loss por Época de Treino: {min(train_losses)}
 Maior Valor de Loss por Época de Treino: {max(train_losses)}
@@ -264,10 +317,21 @@ Valor Médio de Loss por Registro de Treino: {dif_train.mean()}
 Menor Valor de Loss por Registro de Teste: {min(dif_test)}
 Maior Valor de Loss por Registro de Teste: {max(dif_test)}
 Valor Médio de Loss por Registro de Teste: {dif_test.mean()}
-    '''
 
-    # if not isfile(f'./resultados/{fileName}/{fileName}.txt'):
-    #     Path(f'./resultados/{fileName}/{fileName}.txt').touch(exist_ok=True)
+Menor Valor de Abs Loss por Registro de Treino: {min(abs_dif_train)}
+Maior Valor de Abs Loss por Registro de Treino: {max(abs_dif_train)}
+Valor Médio de Abs Loss por Registro de Treino: {abs_dif_train.mean()}
 
-    # with open(f'./resultados/{fileName}/{fileName}.txt', 'w') as arq:
-    #     arq.write(results)
+Menor Valor de Abs Loss por Registro de Teste: {min(abs_dif_test)}
+Maior Valor de Abs Loss por Registro de Teste: {max(abs_dif_test)}
+Valor Médio de Abs Loss por Registro de Teste: {abs_dif_test.mean()}
+'''
+
+    if not isfile(f'./resultados/{fileName}/{fileName}.txt'):
+        Path(f'./resultados/{fileName}/{fileName}.txt').touch(exist_ok=True)
+
+    with open(f'./resultados/{fileName}/{fileName}.txt', 'w') as arq:
+        arq.write(results)
+
+    end = time.time()
+    print(f"Tempo de Salvar informações: {end-start}")
